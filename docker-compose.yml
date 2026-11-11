@@ -17,7 +17,7 @@ services:
       dockerfile: docker/Dockerfile.local
     # Maps the ports (host:container)
     ports:
-      - "8000:8001"
+      - "8000:8000"
     # Mounts the host's ./backend/project to the container's /app
     # The format is host_path:container_path
     # When backend/project is changed, /app will reflect those changes
