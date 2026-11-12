@@ -3,12 +3,12 @@ name: homeaway-stack
 
 # Defines the services for the stack
 services:
-  # Names a service within the stack "web"
-  web:
+  # Names a service within the stack "backend"
+  backend:
     # Names and specifies the image that the service will use
-    image: homeaway-image:local
+    image: homeaway-backend-image:local
     # Names the container for the service
-    container_name: homeaway-container-local
+    container_name: homeaway-backend-container-local
     # Gives build instructions
     build:
       # The context is which directory to start with
@@ -23,3 +23,16 @@ services:
     # When backend/project is changed, /app will reflect those changes
     volumes:
       - ./backend/project:/app
+
+  frontend:
+    image: homeaway-frontend-image:local
+    container_name: homeaway-frontend-container-local
+    build:
+      context: ./frontend
+      dockerfile: docker/Dockerfile.local
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
