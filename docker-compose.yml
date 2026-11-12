@@ -1,0 +1,25 @@
+# Names the compose stack
+name: homeaway-stack
+
+# Defines the services for the stack
+services:
+  # Names a service within the stack "web"
+  web:
+    # Names and specifies the image that the service will use
+    image: homeaway-image:local
+    # Names the container for the service
+    container_name: homeaway-container-local
+    # Gives build instructions
+    build:
+      # The context is which directory to start with
+      context: ./backend
+      # The Dockerfile to use for building the image
+      dockerfile: docker/Dockerfile.local
+    # Maps the ports (host:container)
+    ports:
+      - "8000:8000"
+    # Mounts the host's ./backend/project to the container's /app
+    # The format is host_path:container_path
+    # When backend/project is changed, /app will reflect those changes
+    volumes:
+      - ./backend/project:/app

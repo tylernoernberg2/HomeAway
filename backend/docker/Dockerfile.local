@@ -1,0 +1,39 @@
+# Dockerfile for local development environment
+
+# Use python slim as base image
+FROM python:3.14-slim
+
+# Set working directory of the image. Creates /app directory from scratch, so it's empty
+WORKDIR /app
+
+# Copy requirements file to the working directory
+# COPY <source> <destination>
+COPY requirements.txt .
+
+# Install dependencies from requirements file
+# RUN <command>
+# --no-cache-dir prevents pip from caching "install" packages locally
+# -r specifies to read from the given requirements file
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code
+# Why do we copy the project directory after installing dependencies?
+# This ensures that changes to the application code do not invalidate the cached layer for dependencies, speeding up rebuilds.
+# If a change is made to project/ on rebuild
+COPY project/ .
+
+# Set the default command to run the Django server
+# CMD ["executable", "arg1", "arg2", "..."]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+
+# RUN vs CMD vs EXEC
+# RUN executes commands at build time and creates a new image layer
+# CMD specifies the default command to run when a container is started from the image   
+# EXEC form of CMD allows you to specify the command and its arguments as a JSON array
+
+# To run through Docker, (-f = --file = file, -t = --tag = tag, -p = --publish = port mapping)
+# docker build [options] <build-context>
+# docker run [options] <image>
+# 1. docker build -f docker/Dockerfile.local -t homeaway-image .
+# 2. docker run -p 8000:8000 --name homeaway-container homeaway-image
