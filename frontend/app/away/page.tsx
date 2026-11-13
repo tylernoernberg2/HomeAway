@@ -10,20 +10,31 @@
 import styles from "../page.module.css";
 import { useState, useEffect } from "react";
 
+type Message = {
+    id: number;
+    title: string;
+    message: string;
+};
+
+type MessageResponse = {
+    messages: Message[];
+};
+
 export default function Away() {
     const [message, setMessage] = useState("Loading...");
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch("/api/message")
+        fetch("/api/messages")
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`Request failed: ${response.status}`);
                 }
                 return response.json();
             })
-            .then((data: { message: string }) => {
-                setMessage(data.message);
+            .then((data: MessageResponse) => {
+                const awayMessage = data.messages.find(msg => msg.title === "Away");
+                setMessage(awayMessage ? awayMessage.message : "Away message not found");
             })
             .catch((requestError: Error) => {
                 setError(requestError.message);
