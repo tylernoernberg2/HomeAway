@@ -37,7 +37,7 @@ export default function Away() {
             })
             .then((data: MessageResponse) => {
                 setMessages(data.messages);
-                
+
                 const awayMessage = data.messages.find(msg => msg.title === "Away");
                 setMessage(awayMessage ? awayMessage.message : "Away message not found");
             })
@@ -61,8 +61,17 @@ export default function Away() {
         {/* Select input that will allow the user to choose a message to display */}
         <select
             value={selectedID ?? ""}
-            onChange={(event) => {
-                setSelectedID(Number(event.target.value));
+            onChange={(event) => { {/* When an input is selected, update the selected ID and display the corresponding message */
+                const id = Number(event.target.value);
+                setSelectedID(id);
+
+                const selectedMessage = messages.find(
+                    (item) => item.id === id
+                );
+
+                if (selectedMessage) {
+                    setMessage(selectedMessage.message);
+                }
             }}
             >
             <option value="" disabled>
