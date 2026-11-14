@@ -30,6 +30,9 @@ export default function Away() {
     const [editTitle, setEditTitle] = useState("");
     const [editMessage, setEditMessage] = useState("");
 
+    const [newTitle, setNewTitle] = useState("");
+    const [newMessage, setNewMessage] = useState("");
+
     // Manages PUT requests to update a message
     const handleUpdate = async () => {
         if (selectedID === null) {
@@ -76,6 +79,54 @@ export default function Away() {
         }
     
     }
+
+
+    const handleCreate = async () => {
+        if (!newTitle.trim() || !newMessage.trim()) {
+            setError("Title and message are required");
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/messages", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    title: newTitle,
+                    message: newMessage,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Request failed: ${response.status}`);
+            }
+
+            const createdMessage: Message = await response.json();
+
+            setMessages((currentMessages) => [
+                ...currentMessages,
+                createdMessage,
+            ]);
+
+            setSelectedID(createdMessage.id);
+            setEditTitle(createdMessage.title);
+            setEditMessage(createdMessage.message);
+            setMessage(createdMessage.message);
+
+            setNewTitle("");
+            setNewMessage("");
+            setError(null);
+        
+        } catch (requestError) {
+            if (requestError instanceof Error) {
+                setError(requestError.message);
+            } else {
+                setError("This message could not be created");
+            }
+        }
+    };
 
     useEffect(() => {
         fetch("/api/messages")
@@ -137,6 +188,7 @@ export default function Away() {
             ))}
         </select>
 
+            <h2>Edit message</h2>
 
             <label htmlFor="edit-title">Title</label>
             <input
@@ -159,6 +211,29 @@ export default function Away() {
                 Update message
             </button>
 
+
+            <h2>Create a message</h2>
+
+            <label htmlFor="new-title">Title</label>
+            <input
+                id="new-title"
+                value={newTitle}
+                onChange={(event) => setNewTitle(event.target.value)}
+            />
+
+            <label htmlFor="new-message">Message</label>
+            <textarea
+                id="new-message"
+                value={newMessage}
+                onChange={(event) => setNewMessage(event.target.value)}
+            />
+
+            <button
+                onClick={handleCreate}
+                disabled={!newTitle || !newMessage}
+            >
+                Create message
+            </button>
 
 
 
