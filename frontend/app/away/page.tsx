@@ -24,6 +24,9 @@ export default function Away() {
     const [message, setMessage] = useState("Loading...");
     const [error, setError] = useState<string | null>(null);
 
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [selectedID, setSelectedID] = useState<number | null>(null);
+
     useEffect(() => {
         fetch("/api/messages")
             .then((response) => {
@@ -33,6 +36,8 @@ export default function Away() {
                 return response.json();
             })
             .then((data: MessageResponse) => {
+                setMessages(data.messages);
+                
                 const awayMessage = data.messages.find(msg => msg.title === "Away");
                 setMessage(awayMessage ? awayMessage.message : "Away message not found");
             })
@@ -52,6 +57,25 @@ export default function Away() {
           </ul>
         </nav>
         {error ? <p>Error: {error}</p> : <p>{message}</p>}
+        
+        {/* Select input that will allow the user to choose a message to display */}
+        <select
+            value={selectedID ?? ""}
+            onChange={(event) => {
+                setSelectedID(Number(event.target.value));
+            }}
+            >
+            <option value="" disabled>
+                Select a message
+            </option>
+
+            {messages.map((item) => (
+                <option key={item.id} value={item.id}>
+                {item.title}
+                </option>
+            ))}
+            </select>
+
       </main>
     </div>
   );
