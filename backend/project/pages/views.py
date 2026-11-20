@@ -2,7 +2,7 @@ import json
 
 from django.views.decorators.csrf import csrf_exempt # Used temporarilly for PUT and POST requests, which would be rejected otherwise
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 messages = [
     {
@@ -98,9 +98,16 @@ def api_message_detail(request, message_id):
             status=404, # Not Found
         )
 
+    if request.method == "DELETE":
+        messages.pop(message_index)
+        return HttpResponse(
+            "Message deleted",
+            status=200
+        )
+
     if request.method != "PUT":
         return JsonResponse(
-            {"error": "Only PUT is supported!"},
+            {"error": "Only PUT and DELETE are supported!"},
             status=405, # Method Not Allowed
         )
 

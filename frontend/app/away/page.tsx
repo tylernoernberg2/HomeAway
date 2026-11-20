@@ -33,8 +33,12 @@ export default function Away() {
     const [newTitle, setNewTitle] = useState("");
     const [newMessage, setNewMessage] = useState("");
 
+    const [notification, setNotification] = useState<string | null>(null);
+
     // Manages PUT requests to update a message
     const handleUpdate = async () => {
+        setNotification(null);
+
         if (selectedID === null) {
             setError("Select a message before updating");
             return;
@@ -69,6 +73,7 @@ export default function Away() {
 
             setMessage(updatedMessage.message);
             setError(null);
+            setNotification("Message updated!")
 
         } catch (requestError) {
             if (requestError instanceof Error) {
@@ -82,6 +87,8 @@ export default function Away() {
 
 
     const handleCreate = async () => {
+        setNotification(null);
+
         if (!newTitle.trim() || !newMessage.trim()) {
             setError("Title and message are required");
             return;
@@ -114,6 +121,7 @@ export default function Away() {
             setEditTitle(createdMessage.title);
             setEditMessage(createdMessage.message);
             setMessage(createdMessage.message);
+            setNotification("Message created!")
 
             setNewTitle("");
             setNewMessage("");
@@ -127,6 +135,47 @@ export default function Away() {
             }
         }
     };
+
+
+    const handleDelete = async () => {
+        setNotification(null);
+
+        if (selectedID === null) {
+            setError("No message selected for deletion");
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/messages/${selectedID}`, {
+                method: "DELETE",
+                headers: {
+                    Accept: "application/json"
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Request failed: ${response.status}`);
+            }
+
+            setMessages((currentMessages) =>
+                currentMessages.filter((msg) => msg.id !== selectedID)
+            );
+            setMessage("Select a message to display");
+            setEditTitle("");
+            setEditMessage("");
+            setSelectedID(null);
+            setError(null);
+            setNotification("Message deleted!");
+
+        } catch (requestError) {
+            if (requestError instanceof Error) {
+                setError(requestError.message);
+            } else {
+                setError("This message could not be deleted");
+            }
+        }
+
+    }
 
     useEffect(() => {
         fetch("/api/messages")
@@ -158,6 +207,7 @@ export default function Away() {
           </ul>
         </nav>
         {error ? <p>Error: {error}</p> : <p>{message}</p>}
+        {notification ? <p>{notification}</p> : null}
         
         {/* Select input that will allow the user to choose a message to display */}
         <select
@@ -235,6 +285,14 @@ export default function Away() {
                 Create message
             </button>
 
+            <h2>Delete a message</h2>
+
+            <button
+                onClick={handleDelete}
+                disabled={selectedID === null}
+            >
+                Delete message
+            </button>
 
 
 

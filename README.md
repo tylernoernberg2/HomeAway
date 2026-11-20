@@ -13,6 +13,9 @@ DESIRED TOPICS
 - AWS deployment-ready components (maybe untestable)
 - Logging
 - GET, POST, PUT Practice
+- Databases
+- Roles and permissions
+- Testing
 
 ## Deployment
 To deploy locally, use `make dc-up`. Do end and remove the compose stack, use `make dc-up`. When completely done, use `make dc-clean` to end and remove the compose stack as well as delete volumes and images.
