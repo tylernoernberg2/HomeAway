@@ -8,15 +8,15 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
-    fetch("/api/message") // GET request (fetch) to 3000/api/message, which is rerouted by next.js API routes (next.config.mjs)
+    fetch("/api/messages/1") // GET request (fetch) to 3000/api/messages/1, which is rerouted by next.js API routes (next.config.mjs)
       .then((response) => { // response = fetch response object = contains status, headers, and methods like json() to parse the body
         if (!response.ok) {
           throw new Error(`Request failed: ${response.status}`);
         }
         return response.json(); // parse the message
       })
-      .then((data: { message: string }) => { // data = response.json() = dictionary entry of message
-        setMessage(data.message);
+      .then((data: { title: string; message: string }) => { // data = response.json() = dictionary entry of message
+        setMessage(`${data.title}: ${data.message}`);
       })
       .catch((requestError: Error) => {
         setError(requestError.message);

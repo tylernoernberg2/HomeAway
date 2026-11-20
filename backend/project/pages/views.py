@@ -32,12 +32,6 @@ def validate_message(data):
 
     return None
 
-
-# Here's django's API endpoint returning JsonResponse in a simple message
-def api_message(request):
-    return JsonResponse({"message": "Hello from Django's API"})
-
-
 @csrf_exempt
 def api_messages(request):
     global next_message_id
@@ -105,39 +99,43 @@ def api_message_detail(request, message_id):
             status=200
         )
 
-    if request.method != "PUT":
-        return JsonResponse(
-            {"error": "Only PUT and DELETE are supported!"},
-            status=405, # Method Not Allowed
-        )
+    if request.method == "GET":
+        return JsonResponse(messages[message_index])
 
-    try:
-        data = json.loads(request.body)
 
-        validation_error = validate_message(data)
-        if validation_error:
+    if request.method == "PUT":
+        try:
+            data = json.loads(request.body)
+
+            validation_error = validate_message(data)
+            if validation_error:
+                return JsonResponse(
+                    {"error": validation_error},
+                    status=400, # Bad Request
+                )
+            
+            title = data.get("title")
+            message = data.get("message")
+
+            updated_message = {
+                "id": message_id,
+                "title": title,
+                "message": message,
+            }
+
+            messages[message_index] = updated_message
+            return JsonResponse(updated_message)
+
+        except json.JSONDecodeError:
             return JsonResponse(
-                {"error": validation_error},
+                {"error": "Invalid JSON"},
                 status=400, # Bad Request
             )
-        
-        title = data.get("title")
-        message = data.get("message")
 
-        updated_message = {
-            "id": message_id,
-            "title": title,
-            "message": message,
-        }
-
-        messages[message_index] = updated_message
-        return JsonResponse(updated_message)
-
-    except json.JSONDecodeError:
-        return JsonResponse(
-            {"error": "Invalid JSON"},
-            status=400, # Bad Request
-        )
+    return JsonResponse(
+        {"error": "Only GET, PUT, and DELETE are supported!"},
+        status=405, # Method Not Allowed
+    )
 
 
     # Can test with PUT and POST using curl:
