@@ -5,17 +5,20 @@ COMPLETED TOPICS
 - Django Project
 - Docker Support
 - Makefile
+- GET, POST, PUT, DELETE Requests (No **PATCH** or **QUERY**)
+- ~~REACT or~~ Next.js frontend
+
+
 
 DESIRED TOPICS
 - CELERY
-- REACT or Node.js frontend
 - Minikube+K8s deployment
 - AWS deployment-ready components (maybe untestable)
 - Logging
-- GET, POST, PUT Practice
 - Databases
 - Roles and permissions
 - Testing
+- Beautify frontend
 
 ## Deployment
 To deploy locally, use `make dc-up`. Do end and remove the compose stack, use `make dc-up`. When completely done, use `make dc-clean` to end and remove the compose stack as well as delete volumes and images.
@@ -24,4 +27,4 @@ To deploy locally, use `make dc-up`. Do end and remove the compose stack, use `m
 Since this is a small project, likely there will only be a main branch and its features. If the project bloats, I may add a development branch, but as for now, it will stay simple.
 
 ## Project Structure
-Docker Compose spins up a local server at [localhost:8000](http://localhost.8000), which hosts two pages: home.html and away.html.
+Docker Compose spins up a Django backend at [localhost:8000](http://localhost.8000), which is mostly used as for api calls, and a Next.js frontend at [localhost:3000](http://localhost.3000).
