@@ -118,3 +118,53 @@ Location: http://foresight/v1/api/messages/14
 - Routing
 - Error Handling
 - More on Proxying and CORS
+
+
+
+
+
+
+## Anatomy of Span
+```text
+{
+  "trace_id": "4bf92f3577b34da6a3ce929d0e0e4736",   <- The trace id
+  "span_id": "00f067aa0ba902b7",                    <- This span's id
+  "parent_span_id": "7a2c...",                      <- Previous span's id
+  "name": "POST /feedback",                         <- Cause for span
+  "kind": "SERVER",                                 <- Span cause's role
+  "start_time": "2026-11-20T23:30:00.123Z",         <- Start of span
+  "duration": "42ms",                               <- Duration of span
+  "status": {                                       <- Status of cause
+    "code": "OK"
+  },
+  "attributes": {                                   <- Metadata
+    "http.method": "POST",
+    "http.route": "/feedback",
+    "http.status_code": 200,
+    "service.name": "foresight-backend"
+  },
+  "events": [                                       <- Timestamped points within the span
+    {
+      "name": "exception",
+      "time": "..."
+    }
+  ],
+  "links": [],                                      <- Rleationsihp to other traces or spans, not parent/child
+  "resource": {                                     <- Describes process or service emitting the span
+    "service.name": "foresight-backend",
+    "deployment.environment": "dev"
+  }
+}
+```
+
+
+## uv vs pip
+
+### pip
+pip is Python's traditional **package installer**. For example, `pip install Django`. We also use it in Dockerfiles, i.e. `RUN pip install -r requirements.txt`. When running local servers without containerization, we also like to create environments so our installed packages don't affect other projects. We have to set this environment up separately. Additionally, when we run something like a Django server in the environment, we do these things independently of pip as well. 
+
+### uv
+uv is a **project and package manager**. It handles both environment and dependencies. It is also faster than pip, which is just the cherry on top. 
+
+### requirements.txt vs
+With pip, we generally put the dependencies of a project in a requirements.txt file which states the dependency as well as its version (i.e. `Django==4.2`). For uv, instead of requirements.txt, we use pyproject.toml. We then call uv.lock to create track all "trickle" dependencies (dependencies that another dependency might need). I reads the pyproject.toml, and "locks in" the current environment. This makes the environments easy to "sync up" using uv.sync.

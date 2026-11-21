@@ -8,9 +8,14 @@ COMPLETED TOPICS
 - GET, POST, PUT, DELETE Requests (No **PATCH** or **QUERY**)
 - ~~REACT or~~ Next.js frontend
 
-
+IN PROGRESS
+- uv integration
 
 DESIRED TOPICS
+- Ruff linting
+- SSO
+- IDP
+- Cookies
 - CELERY
 - Minikube+K8s deployment
 - AWS deployment-ready components (maybe untestable)
