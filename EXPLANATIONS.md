@@ -168,3 +168,8 @@ uv is a **project and package manager**. It handles both environment and depende
 
 ### requirements.txt vs
 With pip, we generally put the dependencies of a project in a requirements.txt file which states the dependency as well as its version (i.e. `Django==4.2`). For uv, instead of requirements.txt, we use pyproject.toml. We then call uv.lock to create track all "trickle" dependencies (dependencies that another dependency might need). I reads the pyproject.toml, and "locks in" the current environment. This makes the environments easy to "sync up" using uv.sync.
+
+## Ruff and Linting
+A linter is a program that reviews code that checks text and structure of code. It can find problems in the code as well as standardizes formatting. For larger projects with teams, this is valuable for keeping a standard.
+
+Ruff is a Pythin linter and formatter. 
