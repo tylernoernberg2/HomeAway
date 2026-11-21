@@ -1,0 +1,13 @@
+# Pyproject configuration for the HomeAway backend project
+# This file contains the project metadata and dependencies for the HomeAway backend project.
+# We build this file first before locking dependencies with a lock file
+# uv.lock will be created using the uv.lock command
+
+[project]
+name = "homeaway-backend"
+version = "0.1.0"
+description = "Backend for HomeAway project"
+requires-python = "==3.14.6"
+dependencies = [
+    "django==4.2",
+]

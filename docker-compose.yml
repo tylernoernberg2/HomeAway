@@ -20,9 +20,9 @@ services:
       - "8000:8000"
     # Mounts the host's ./backend/project to the container's /app
     # The format is host_path:container_path
-    # When backend/project is changed, /app will reflect those changes
+    # When backend/project is changed, /app/project/ will reflect those changes
     volumes:
-      - ./backend/project:/app
+      - ./backend/project:/app/project/
 
   frontend:
     image: homeaway-frontend-image:local
