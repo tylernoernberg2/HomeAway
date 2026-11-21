@@ -6,26 +6,28 @@ FROM python:3.14-slim
 # Set working directory of the image. Creates /app directory from scratch, so it's empty
 WORKDIR /app
 
-# Copy requirements file to the working directory
-# COPY <source> <destination>
-COPY requirements.txt .
+# Install uv into the image.
+COPY --from=ghcr.io/astral-sh/uv:0.13.5 /uv /uvx /bin/
 
-# Install dependencies from requirements file
-# RUN <command>
-# --no-cache-dir prevents pip from caching "install" packages locally
-# -r specifies to read from the given requirements file
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy dependency metadata first so dependency changes are isolated
+# from application-code changes in Docker's build cache
+COPY pyproject.toml uv.lock ./
 
-# Copy the rest of the application code
-# Why do we copy the project directory after installing dependencies?
-# This ensures that changes to the application code do not invalidate the cached layer for dependencies, speeding up rebuilds.
-# If a change is made to project/ on rebuild
-COPY project/ .
+# Create the uv-managed environment from the locked dependencies.
+# --locked prevents uv from changing uv.lock during the build.
+# --no-install-project skips installing the local project itself.
+RUN uv sync --locked --no-install-project
 
-# Set the default command to run the Django server
+# Copy the Django application code.
+COPY project/ /app/project/
+
+# Update working directory to the project folder
+WORKDIR /app/project
+
+# Set the default command to run when the container starts
+# We use uv to run the Django server within the uv-managed environment.
 # CMD ["executable", "arg1", "arg2", "..."]
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
+CMD ["uv", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 # RUN vs CMD vs EXEC
 # RUN executes commands at build time and creates a new image layer
