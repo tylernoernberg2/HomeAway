@@ -8,9 +8,9 @@ COMPLETED TOPICS
 - GET, POST, PUT, DELETE Requests (No **PATCH** or **QUERY**)
 - ~~REACT or~~ Next.js frontend
 - uv integration
+- Ruff integration
 
 IN PROGRESS
-- Ruff linting
 
 DESIRED TOPICS
 - SSO
@@ -38,4 +38,16 @@ Docker Compose spins up a Django backend at [localhost:8000](http://localhost.80
 We use uv as its Python package manager and handler, and npm for its JavaScript package manager. To add dependencies, go to `HomeAway/backend` and use  `uv add <package>`. A tag we may use is `--dev`, which means the package is a development dependency. 
 
 ## Project Standardization
-We use Ruff linting and formatting in order to keep a standard formatting and structure of code. 
+We use Ruff linting and formatting in order to keep a standard formatting and structure of code. Now, Ruff automatically runs when a commit is attempted. If the code fails either test (structure (check) and format), the commit will fail and the files that failed will be updated by Ruff to pass the tests. 
+
+You must install the pre-commit upon cloning the project in order for it to kick in:
+
+```
+uv run pre-commit install
+```
+
+Otherwise, you can call it manually:
+
+```
+uv run pre-commit run --all-files
+```
