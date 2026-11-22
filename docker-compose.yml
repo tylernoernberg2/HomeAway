@@ -40,3 +40,18 @@ services:
       - DOCKER_PROXY_TARGET=http://backend:8000
     depends_on:
       - backend
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.3
+    container_name: homeaway-keycloak-container-local
+    command: start-dev
+    ports:
+      - "8080:8080"
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=change-me-locally
+    volumes:
+      - keycloak-data:/opt/keycloak/data
+
+volumes:
+  keycloak-data:

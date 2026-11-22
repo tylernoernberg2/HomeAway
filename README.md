@@ -11,11 +11,11 @@ COMPLETED TOPICS
 - Ruff integration
 
 IN PROGRESS
+- SSO
+- IdP (Keycloak)
+- Cookies
 
 DESIRED TOPICS
-- SSO
-- IDP
-- Cookies
 - CELERY
 - Minikube+K8s deployment
 - AWS deployment-ready components (maybe untestable)
@@ -40,7 +40,7 @@ We use uv as its Python package manager and handler, and npm for its JavaScript 
 ## Project Standardization
 We use Ruff linting and formatting in order to keep a standard formatting and structure of code. Now, Ruff automatically runs when a commit is attempted. If the code fails either test (structure (check) and format), the commit will fail and the files that failed will be updated by Ruff to pass the tests. 
 
-You must install the pre-commit upon cloning the project in order for it to kick in:
+You must install the pre-commit hook upon cloning the project in order for it to kick in:
 
 ```
 uv run pre-commit install
