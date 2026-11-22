@@ -1,5 +1,5 @@
 # HomeAway
-A simple project that sets up a Django project with Docker support for learning. It uses uv as its Python package manager and handler, and npm for its JavaScript package manager. It will be added to intermittently to teach/demonstrate a topic. 
+A simple project that sets up a Django project with Docker support for learning. It will be added to intermittently to teach/demonstrate a topic.
 
 COMPLETED TOPICS
 - Django Project
@@ -33,6 +33,9 @@ Since this is a small project, likely there will only be a main branch and its f
 
 ## Project Structure
 Docker Compose spins up a Django backend at [localhost:8000](http://localhost.8000), which is mostly used as for api calls, and a Next.js frontend at [localhost:3000](http://localhost.3000).
+
+## Package Management and Handling
+We use uv as its Python package manager and handler, and npm for its JavaScript package manager. To add dependencies, go to `HomeAway/backend` and use  `uv add <package>`. A tag we may use is `--dev`, which means the package is a development dependency. 
 
 ## Project Standardization
 We use Ruff linting and formatting in order to keep a standard formatting and structure of code. 
