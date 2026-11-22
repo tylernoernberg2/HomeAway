@@ -1,8 +1,9 @@
 import json
 
-from django.views.decorators.csrf import csrf_exempt # Used temporarilly for PUT and POST requests, which would be rejected otherwise
-
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import (
+    csrf_exempt,  # Used temporarilly for PUT and POST requests, which would be rejected otherwise
+)
 
 messages = [
     {
