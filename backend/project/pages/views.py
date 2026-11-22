@@ -1,8 +1,9 @@
 import json
 
-from django.views.decorators.csrf import csrf_exempt # Used temporarilly for PUT and POST requests, which would be rejected otherwise
-
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import (
+    csrf_exempt,  # Used temporarilly for PUT and POST requests, which would be rejected otherwise
+)
 
 messages = [
     {
@@ -14,10 +15,11 @@ messages = [
         "id": 2,
         "title": "Away",
         "message": "This is the Away page!",
-    }
+    },
 ]
 
 next_message_id = 3
+
 
 # Helper function to validate message data
 def validate_message(data):
@@ -31,6 +33,7 @@ def validate_message(data):
         return "Title and message must be strings"
 
     return None
+
 
 @csrf_exempt
 def api_messages(request):
@@ -47,7 +50,7 @@ def api_messages(request):
             if validation_error:
                 return JsonResponse(
                     {"error": validation_error},
-                    status=400, # Bad Request
+                    status=400,  # Bad Request
                 )
 
             title = data.get("title")
@@ -61,18 +64,20 @@ def api_messages(request):
 
             messages.append(new_message)
             next_message_id += 1
-            return JsonResponse(new_message, status=201) # Status 201 = Created resource
-        
+            return JsonResponse(
+                new_message, status=201
+            )  # Status 201 = Created resource
+
         except json.JSONDecodeError:
             return JsonResponse(
                 {"error": "Invalid JSON"},
-                status=400, # Bad Request
+                status=400,  # Bad Request
             )
 
     return JsonResponse(
-                {"error": "Only GET and POST are supported!"},
-                status=405, # Method Not Allowed
-            )
+        {"error": "Only GET and POST are supported!"},
+        status=405,  # Method Not Allowed
+    )
 
 
 @csrf_exempt
@@ -83,25 +88,21 @@ def api_message_detail(request, message_id):
             for index, message in enumerate(messages)
             if message["id"] == message_id
         ),
-        None
+        None,
     )
 
     if message_index is None:
         return JsonResponse(
             {"error": "Message not found"},
-            status=404, # Not Found
+            status=404,  # Not Found
         )
 
     if request.method == "DELETE":
         messages.pop(message_index)
-        return HttpResponse(
-            "Message deleted",
-            status=200
-        )
+        return HttpResponse("Message deleted", status=200)
 
     if request.method == "GET":
         return JsonResponse(messages[message_index])
-
 
     if request.method == "PUT":
         try:
@@ -111,9 +112,9 @@ def api_message_detail(request, message_id):
             if validation_error:
                 return JsonResponse(
                     {"error": validation_error},
-                    status=400, # Bad Request
+                    status=400,  # Bad Request
                 )
-            
+
             title = data.get("title")
             message = data.get("message")
 
@@ -129,14 +130,13 @@ def api_message_detail(request, message_id):
         except json.JSONDecodeError:
             return JsonResponse(
                 {"error": "Invalid JSON"},
-                status=400, # Bad Request
+                status=400,  # Bad Request
             )
 
     return JsonResponse(
         {"error": "Only GET, PUT, and DELETE are supported!"},
-        status=405, # Method Not Allowed
+        status=405,  # Method Not Allowed
     )
-
 
     # Can test with PUT and POST using curl:
     # Example for POST:
