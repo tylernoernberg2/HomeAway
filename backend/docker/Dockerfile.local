@@ -3,6 +3,14 @@
 # Use python slim as base image
 FROM python:3.14-slim
 
+# Install XML signature tools required by SAML
+RUN apt-get update \
+    # apt-get install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends \
+    libxmlsec1-openssl \
+    xmlsec1 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Set working directory of the image. Creates /app directory from scratch, so it's empty
 WORKDIR /app
 
